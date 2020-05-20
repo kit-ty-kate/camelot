@@ -85,9 +85,9 @@ let spec =
   ;  "-d", Set_string lint_dir, 
     "\tInvoke the linter on the provided directory, defaulting to the current directory, non re"
   ; "-show", String set_display_type,
-    "\tMake the linter output display for either ta's | students | gradescope"
+    "Make the linter output display for either ta's | students | gradescope"
   ; "-f", String set_lint_file,
-    "Invoke the linter on a single file"
+    "\tInvoke the linter on a single file"
   ] 
 
 let () = 
