@@ -37,11 +37,16 @@ module NestedIf : EXPRCHECK = struct
   let fix = "using let statements or helper methods / rethinking logic"
   let violation = "using nested if statements more than three layers deep"
   let check st (E {location; source; pattern} : ctxt) =
+    (* Determine if all if statements check the value of the same variable *)
     let rec uses_same_var cond bthen belse = 
-      begin match bthen with 
-        | Pexp_ifthenelse (cond', bthen', Some belse') -> (*todo*) true
-        | _ -> true
-      end
+      let check_arm (arm: Parsetree.expression) : bool = 
+        begin match arm.pexp_desc with 
+          | Pexp_ifthenelse (cond', bthen', Some belse') -> conds_same_var cond cond' &&
+                                                            uses_same_var cond' bthen' belse'
+          | _ -> true
+        end  
+      in 
+      check_arm bthen && check_arm belse
     in 
     begin match pattern with
     | Pexp_ifthenelse (cond, bthen, Some belse) ->

@@ -29,4 +29,7 @@ let t7 = if x then false else y
 
 (* if x then y else true *)
 let t8 = if x then y else true
-    
+
+(* Nested ifs with same var on each lhs*)
+let k = 5
+let q = if k = 3 then 1 else if k = 2 then 6 else if k = 9 then 6 else if k = 89 then 5 else 0

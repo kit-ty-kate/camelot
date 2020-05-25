@@ -1,5 +1,5 @@
 open Parsetree
-  
+
 type exp = Parsetree.expression
              
 let is_id e id : bool = 
@@ -161,5 +161,13 @@ let uses_func_recursively_seq (case: Parsetree.case) func_name tail_binding : bo
             func =~ func_name &&
             List.exists (fun (_, arg) ->  arg =~ tail_binding) args
   | _ -> false
+
+
+(* Returns true iff two binary expressions have the same left-hand operand *)
+let conds_same_var cond1 cond2 : bool = 
+  begin match cond1.pexp_desc, cond2.pexp_desc with 
+    | Pexp_apply (_, [(_,lop1); _]), Pexp_apply (_, [(_,lop2); _]) ->  lop1 = lop2
+    | _ -> false
+  end
 
   
