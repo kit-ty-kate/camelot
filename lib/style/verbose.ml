@@ -37,8 +37,15 @@ module NestedIf : EXPRCHECK = struct
   let fix = "using let statements or helper methods / rethinking logic"
   let violation = "using nested if statements more than three layers deep"
   let check st (E {location; source; pattern} : ctxt) =
+    let rec uses_same_var cond bthen belse = 
+      begin match bthen with 
+        | Pexp_ifthenelse (cond', bthen', Some belse') -> (*todo*) true
+        | _ -> true
+      end
+    in 
     begin match pattern with
-    | Pexp_ifthenelse (_, bthen, Some belse) ->
+    | Pexp_ifthenelse (cond, bthen, Some belse) ->
+      if uses_same_var cond bthen belse then () else
       let lside = match get_branches bthen with | Some (e1, e2) -> [e1;e2] | None -> [] in
       let rside = match get_branches belse with | Some (e1, e2) -> [e1; e2] | None -> [] in
       let branches_three = (lside @ rside) |>
